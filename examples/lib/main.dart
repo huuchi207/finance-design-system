@@ -20,17 +20,9 @@ class _FinanceDSGalleryState extends State<FinanceDSGallery> {
   BrandConfig _currentBrand = Brands.defaultBrand;
   bool _isDarkMode = false;
 
-  void _cycleBrand() {
+  void _setBrand(BrandConfig brand) {
     setState(() {
-      if (_currentBrand.name == Brands.defaultBrand.name) {
-        _currentBrand = Brands.bankA;
-      } else if (_currentBrand.name == Brands.bankA.name) {
-        _currentBrand = Brands.walletB;
-      } else if (_currentBrand.name == Brands.walletB.name) {
-        _currentBrand = Brands.neoC;
-      } else {
-        _currentBrand = Brands.defaultBrand;
-      }
+      _currentBrand = brand;
     });
   }
 
@@ -50,11 +42,17 @@ class _FinanceDSGalleryState extends State<FinanceDSGallery> {
         title: 'Finance DS Gallery',
         debugShowCheckedModeBanner: false,
         theme: themeData,
+        builder: (context, child) {
+          return GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: child,
+          );
+        },
         home: _GalleryHome(
           currentBrand: _currentBrand,
           isDarkMode: _isDarkMode,
           onToggleDarkMode: () => setState(() => _isDarkMode = !_isDarkMode),
-          onCycleBrand: _cycleBrand,
+          onBrandChanged: _setBrand,
         ),
       ),
     );
@@ -66,13 +64,13 @@ class _GalleryHome extends StatelessWidget {
     required this.currentBrand,
     required this.isDarkMode,
     required this.onToggleDarkMode,
-    required this.onCycleBrand,
+    required this.onBrandChanged,
   });
 
   final BrandConfig currentBrand;
   final bool isDarkMode;
   final VoidCallback onToggleDarkMode;
-  final VoidCallback onCycleBrand;
+  final ValueChanged<BrandConfig> onBrandChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +108,7 @@ class _GalleryHome extends StatelessWidget {
               case 0:
                 return FoundationsPage(
                   onToggleDarkMode: onToggleDarkMode,
-                  onCycleBrand: onCycleBrand,
+                  onBrandChanged: onBrandChanged,
                   currentBrand: currentBrand,
                   isDarkMode: isDarkMode,
                 );
@@ -123,7 +121,7 @@ class _GalleryHome extends StatelessWidget {
               default:
                 return const FoundationsPage(
                   onToggleDarkMode: null,
-                  onCycleBrand: null,
+                  onBrandChanged: null,
                   currentBrand: null,
                   isDarkMode: false,
                 );

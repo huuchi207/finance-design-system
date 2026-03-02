@@ -3,18 +3,37 @@ import 'package:design_tokens/design_tokens.dart';
 import 'package:cupertino_components/cupertino_components.dart';
 import '../widgets/code_example_card.dart';
 
+String _brandKey(BrandConfig? brand) {
+  if (brand == null) return 'default';
+  if (brand.name == Brands.bankA.name) return 'bankA';
+  if (brand.name == Brands.walletB.name) return 'walletB';
+  if (brand.name == Brands.neoC.name) return 'neoC';
+  if (brand.name == Brands.viettelMoney.name) return 'viettel';
+  return 'default';
+}
+
+BrandConfig _brandFromKey(String key) {
+  switch (key) {
+    case 'bankA': return Brands.bankA;
+    case 'walletB': return Brands.walletB;
+    case 'neoC': return Brands.neoC;
+    case 'viettel': return Brands.viettelMoney;
+    default: return Brands.defaultBrand;
+  }
+}
+
 /// Foundations gallery — colors, typography, spacing, brand switching.
 class FoundationsPage extends StatelessWidget {
   const FoundationsPage({
     super.key,
     required this.onToggleDarkMode,
-    required this.onCycleBrand,
+    required this.onBrandChanged,
     required this.currentBrand,
     required this.isDarkMode,
   });
 
   final VoidCallback? onToggleDarkMode;
-  final VoidCallback? onCycleBrand;
+  final ValueChanged<BrandConfig>? onBrandChanged;
   final BrandConfig? currentBrand;
   final bool isDarkMode;
 
@@ -54,16 +73,21 @@ class FoundationsPage extends StatelessWidget {
                     showSeparator: true,
                     backgroundColor: colors.bgPrimary,
                   ),
-                  FinListCell(
-                    title: 'Brand',
-                    trailing: Text(
-                      currentBrand?.name ?? 'Default',
-                      style: typo.bodyMedium.copyWith(color: colors.accentPrimary),
-                    ),
-                    onTap: onCycleBrand,
-                    showDisclosure: true,
-                    showSeparator: false,
-                    backgroundColor: colors.bgPrimary,
+                  const SizedBox(height: FinSpacing.space8),
+                  FinDropdown<String>(
+                    label: 'Brand',
+                    items: const [
+                      FinDropdownItem(value: 'default', label: 'Finance DS'),
+                      FinDropdownItem(value: 'bankA', label: 'Bank Alpha'),
+                      FinDropdownItem(value: 'walletB', label: 'Wallet Beta'),
+                      FinDropdownItem(value: 'neoC', label: 'Neo Gamma'),
+                      FinDropdownItem(value: 'viettel', label: 'Viettel Money'),
+                    ],
+                    selectedValue: _brandKey(currentBrand),
+                    onChanged: (key) {
+                      final brand = _brandFromKey(key);
+                      onBrandChanged?.call(brand);
+                    },
                   ),
                 ],
               ),
@@ -224,6 +248,7 @@ SizedBox(height: FinSpacing.cardPadding);    // 16''',
                   _BrandPreview('Bank A', Brands.bankA, colors),
                   _BrandPreview('Wallet B', Brands.walletB, colors),
                   _BrandPreview('Neo C', Brands.neoC, colors),
+                  _BrandPreview('Viettel', Brands.viettelMoney, colors),
                 ],
               ),
             ),

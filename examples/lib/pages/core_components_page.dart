@@ -16,6 +16,9 @@ class _CoreComponentsPageState extends State<CoreComponentsPage> {
   bool _checkboxValue = false;
   String _radioValue = 'option1';
   int _segmentValue = 0;
+  int _tabBarIndex = 0;
+  String _navBarTitle = 'Transactions';
+  String? _dropdownValue;
 
   @override
   Widget build(BuildContext context) {
@@ -559,12 +562,29 @@ FinSkeletonLayouts.balanceCard();''',
                 child: Column(
                   children: [
                     FinNavigationBar(
-                      title: 'Transactions',
+                      title: _navBarTitle,
                       leading: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _navBarTitle = _navBarTitle == 'Transactions'
+                                ? 'Home'
+                                : 'Transactions';
+                          });
+                          FinToast.show(
+                            context: context,
+                            message: 'Navigated back to $_navBarTitle',
+                            variant: FinToastVariant.info,
+                          );
+                        },
                         child: Icon(CupertinoIcons.back,
                             color: colors.accentPrimary, size: FinIconSize.md),
                       ),
                       trailing: GestureDetector(
+                        onTap: () => FinToast.show(
+                          context: context,
+                          message: 'Notifications tapped',
+                          variant: FinToastVariant.info,
+                        ),
                         child: Icon(CupertinoIcons.bell,
                             color: colors.accentPrimary, size: FinIconSize.md),
                       ),
@@ -573,7 +593,7 @@ FinSkeletonLayouts.balanceCard();''',
                       height: 60,
                       color: colors.bgSecondary,
                       child: Center(
-                        child: Text('Page Content',
+                        child: Text('$_navBarTitle Content',
                             style: theme.typography.caption
                                 .copyWith(color: colors.textTertiary)),
                       ),
@@ -596,11 +616,25 @@ FinSkeletonLayouts.balanceCard();''',
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(CupertinoIcons.search,
-                              color: colors.accentPrimary, size: FinIconSize.sm),
+                          GestureDetector(
+                            onTap: () => FinToast.show(
+                              context: context,
+                              message: 'Search tapped',
+                              variant: FinToastVariant.info,
+                            ),
+                            child: Icon(CupertinoIcons.search,
+                                color: colors.accentPrimary, size: FinIconSize.sm),
+                          ),
                           const SizedBox(width: FinSpacing.space16),
-                          Icon(CupertinoIcons.ellipsis_circle,
-                              color: colors.accentPrimary, size: FinIconSize.sm),
+                          GestureDetector(
+                            onTap: () => FinToast.show(
+                              context: context,
+                              message: 'More options tapped',
+                              variant: FinToastVariant.info,
+                            ),
+                            child: Icon(CupertinoIcons.ellipsis_circle,
+                                color: colors.accentPrimary, size: FinIconSize.sm),
+                          ),
                         ],
                       ),
                     ),
@@ -658,9 +692,10 @@ CustomScrollView(
                       height: 80,
                       color: colors.bgSecondary,
                       child: Center(
-                        child: Text('Tab Content Area',
-                            style: theme.typography.caption
-                                .copyWith(color: colors.textTertiary)),
+                        child: Text(
+                            const ['Home', 'Transactions', 'Reports', 'Profile'][_tabBarIndex],
+                            style: theme.typography.bodyLarge
+                                .copyWith(color: colors.textSecondary)),
                       ),
                     ),
                     FinBottomTabBar(
@@ -685,8 +720,8 @@ CustomScrollView(
                           label: 'Profile',
                         ),
                       ],
-                      currentIndex: 0,
-                      onTap: (i) {},
+                      currentIndex: _tabBarIndex,
+                      onTap: (i) => setState(() => _tabBarIndex = i),
                     ),
                   ],
                 ),
@@ -714,6 +749,157 @@ CustomScrollView(
   currentIndex: selectedTab,
   onTap: (index) => setTab(index),
 );''',
+            ),
+
+            // ═══════════════════════════════════════
+            // DROPDOWN
+            // ═══════════════════════════════════════
+            _section('Dropdown', [
+              FinDropdown<String>(
+                label: 'Account Type',
+                placeholder: 'Select account...',
+                items: const [
+                  FinDropdownItem(value: 'savings', label: 'Savings Account', icon: CupertinoIcons.money_dollar),
+                  FinDropdownItem(value: 'checking', label: 'Checking Account', icon: CupertinoIcons.creditcard),
+                  FinDropdownItem(value: 'investment', label: 'Investment Account', icon: CupertinoIcons.chart_bar),
+                  FinDropdownItem(value: 'crypto', label: 'Crypto Wallet', icon: CupertinoIcons.bitcoin_circle),
+                ],
+                selectedValue: _dropdownValue,
+                onChanged: (v) => setState(() => _dropdownValue = v),
+              ),
+              const SizedBox(height: FinSpacing.space16),
+              const FinDropdown<String>(
+                label: 'Disabled Dropdown',
+                placeholder: 'Not available',
+                items: [],
+                selectedValue: null,
+                onChanged: null,
+                isDisabled: true,
+              ),
+            ]),
+            const CodeExampleCard(
+              title: 'FinDropdown Code',
+              code: '''FinDropdown<String>(
+  label: 'Account Type',
+  placeholder: 'Select account...',
+  items: [
+    FinDropdownItem(
+      value: 'savings',
+      label: 'Savings Account',
+      icon: CupertinoIcons.money_dollar,
+    ),
+    FinDropdownItem(
+      value: 'checking',
+      label: 'Checking Account',
+    ),
+  ],
+  selectedValue: selected,
+  onChanged: (v) => setAccount(v),
+);''',
+            ),
+
+            // ═══════════════════════════════════════
+            // AVATAR
+            // ═══════════════════════════════════════
+            _section('Avatar', [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    children: [
+                      const FinAvatar(
+                        initials: 'JD',
+                        size: FinAvatarSize.small,
+                      ),
+                      const SizedBox(height: FinSpacing.space4),
+                      Text('Small', style: theme.typography.caption.copyWith(color: colors.textTertiary)),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      const FinAvatar(
+                        initials: 'AB',
+                        size: FinAvatarSize.medium,
+                        status: FinAvatarStatus.online,
+                      ),
+                      const SizedBox(height: FinSpacing.space4),
+                      Text('Medium', style: theme.typography.caption.copyWith(color: colors.textTertiary)),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      const FinAvatar(
+                        initials: 'VT',
+                        size: FinAvatarSize.large,
+                        status: FinAvatarStatus.busy,
+                      ),
+                      const SizedBox(height: FinSpacing.space4),
+                      Text('Large', style: theme.typography.caption.copyWith(color: colors.textTertiary)),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: FinSpacing.space16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    children: [
+                      FinAvatar(
+                        imageUrl: 'https://i.pravatar.cc/150?img=1',
+                        size: FinAvatarSize.medium,
+                        status: FinAvatarStatus.online,
+                        onTap: () => FinToast.show(
+                          context: context,
+                          message: 'Avatar tapped!',
+                          variant: FinToastVariant.info,
+                        ),
+                      ),
+                      const SizedBox(height: FinSpacing.space4),
+                      Text('Image', style: theme.typography.caption.copyWith(color: colors.textTertiary)),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      const FinAvatar(
+                        initials: 'VN',
+                        size: FinAvatarSize.medium,
+                        status: FinAvatarStatus.offline,
+                      ),
+                      const SizedBox(height: FinSpacing.space4),
+                      Text('Offline', style: theme.typography.caption.copyWith(color: colors.textTertiary)),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      const FinAvatar(
+                        size: FinAvatarSize.medium,
+                      ),
+                      const SizedBox(height: FinSpacing.space4),
+                      Text('Fallback', style: theme.typography.caption.copyWith(color: colors.textTertiary)),
+                    ],
+                  ),
+                ],
+              ),
+            ]),
+            const CodeExampleCard(
+              title: 'FinAvatar Code',
+              code: '''// Initials avatar
+FinAvatar(
+  initials: 'JD',
+  size: FinAvatarSize.medium,
+  status: FinAvatarStatus.online,
+);
+
+// Image avatar
+FinAvatar(
+  imageUrl: 'https://example.com/photo.jpg',
+  size: FinAvatarSize.large,
+  onTap: () => viewProfile(),
+);
+
+// Sizes: small (28), medium (40), large (56)
+// Status: online, offline, busy''',
             ),
 
             const SizedBox(height: FinSpacing.space48),

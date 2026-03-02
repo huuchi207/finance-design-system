@@ -98,4 +98,12 @@ class Brands {
     accentPrimaryPressed: Color(0xFF0B7A70),
     accentSecondary: Color(0xFFE6F7F5),
   );
+
+  /// Viettel Money — red accent
+  static const BrandConfig viettelMoney = BrandConfig(
+    name: 'Viettel Money',
+    accentPrimary: Color(0xFFED0233),
+    accentPrimaryPressed: Color(0xFFC50029),
+    accentSecondary: Color(0xFFFDE8EC),
+  );
 }

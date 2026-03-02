@@ -30,3 +30,5 @@ export 'src/feedback/fin_toast.dart';
 export 'src/feedback/fin_banner.dart';
 export 'src/feedback/fin_inline_message.dart';
 export 'src/loading/fin_skeleton.dart';
+export 'src/selection/fin_dropdown.dart';
+export 'src/avatar/fin_avatar.dart';
