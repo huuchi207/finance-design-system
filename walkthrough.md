@@ -130,13 +130,15 @@ Run: `cd examples && flutter run`
 
 ---
 
-## Test Results (49 passing)
+## Test Results (149 passing)
 
 | Package | Tests | Status |
 |---|---|---|
-| `design_tokens` | 19 | ✅ |
+| `design_tokens` | 65 | ✅ |
+| `app_foundation` | 33 | ✅ |
+| `cupertino_components` | 28 | ✅ |
 | `finance_components` | 22 | ✅ |
-| `app_foundation` | 8 | ✅ |
+| `examples` | 1 | ✅ |
 
 Run all: `cd <package> && flutter test`
 
@@ -190,7 +192,10 @@ FinanceThemeDataExtension.light(brand: myBrand);
 
 ## Next Steps (Future Work)
 
-- [ ] Widget tests for all components
+- [x] Unit tests for `design_tokens` (65 tests)
+- [x] Unit tests for `app_foundation` (33 tests)
+- [x] Widget tests for `cupertino_components` (28 tests)
+- [ ] Widget tests for remaining components (`finance_components` widgets)
 - [ ] Integration tests for full user flows
 - [ ] Accessibility audit (VoiceOver, Dynamic Type)
 - [ ] Component API documentation (dartdoc)
